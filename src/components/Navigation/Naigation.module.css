@@ -1,0 +1,16 @@
+.navigation {
+    display: flex;
+    gap: 15px;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
+.link {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}
+
+.active {
+    color: red;
+}
