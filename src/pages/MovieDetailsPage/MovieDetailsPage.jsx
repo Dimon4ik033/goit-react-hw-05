@@ -1,13 +1,16 @@
-import { useParams, useNavigate, Link, Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useParams, useNavigate, Link, Outlet, useLocation } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
 import { fetchMovieDetails } from "../../services/api";
 import css from "./MovieDetailsPage.module.css";
 
 export default function MovieDetailsPage() {
     const { movieId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [movie, setMovie] = useState(null);
     const [error, setError] = useState(null);
+
+    const previousLocationRef = useRef(location.state?.from ?? '/movies');
 
     useEffect(() => {
         fetchMovieDetails(movieId)
@@ -16,7 +19,7 @@ export default function MovieDetailsPage() {
     }, [movieId]);
 
     const handleGoBack = () => {
-        navigate(-1);
+        navigate(previousLocationRef.current); 
     };
 
     if (error) {
@@ -38,10 +41,10 @@ export default function MovieDetailsPage() {
                     alt={title}
                     width="300"
                 />
-                <container className={css.detailsContainer}>
+                <div className={css.detailsContainer}>
                     <h1>{title}</h1>
-                    <p>{popularity}</p>
-                    <h2>Owerviews</h2>
+                    <p>Popularity: {popularity}</p>
+                    <h2>Overview</h2>
                     <p>{overview}</p>
                     <h2>Genres</h2>
                     <ul className={css.genreList}>
@@ -49,7 +52,7 @@ export default function MovieDetailsPage() {
                             <li key={genre.id}>{genre.name}</li>
                         ))}
                     </ul>
-                </container>
+                </div>
             </div>
             <nav className={css.navigation}>
                 <Link to={`/movies/${movieId}/cast`}>Cast</Link> | 
@@ -59,3 +62,4 @@ export default function MovieDetailsPage() {
         </main>
     );
 }
+
